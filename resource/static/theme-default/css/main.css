@@ -1,4 +1,12 @@
 /* 屏幕适配 */
+@media only screen and (min-width:1200px) {
+  .ui.container {
+    width: 95% !important;
+    font-size: 90% !important;
+    max-width: 1300px !important;
+  }
+}
+
 @media only screen and (max-width:767px) {
   .ui.card>.content>.header:not(.ui),
   .ui.cards>.card>.content>.header:not(.ui) {
@@ -42,11 +50,6 @@ td {
   min-height: 100vh;
   padding-bottom: 65px;
   margin-bottom: -47px;
-}
-
-.ui.container {
-  width: 95%;
-  max-width: 1680px !important;
 }
 
 #app .ui.fluid.accordion {
