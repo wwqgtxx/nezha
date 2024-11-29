@@ -138,12 +138,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
 
-      - name: Log in to the AliyunCS
-        uses: docker/login-action@master
-        with:
-          registry: registry.cn-shanghai.aliyuncs.com
-          username: ${{ secrets.ALI_USER }}
-          password: ${{ secrets.ALI_PAT }}
+#      - name: Log in to the AliyunCS
+#        uses: docker/login-action@master
+#        with:
+#          registry: registry.cn-shanghai.aliyuncs.com
+#          username: ${{ secrets.ALI_USER }}
+#          password: ${{ secrets.ALI_PAT }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -154,8 +154,8 @@ jobs:
       - name: Set up image name
         run: |
           GHCR_IMAGE_NAME=$(echo "ghcr.io/${{ github.repository_owner }}/nezha-dashboard" | tr '[:upper:]' '[:lower:]')
-          if [ ${{ github.repository_owner }} = "naiba" ]
-            then ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/naibahq/nezha-dashboard")
+          if [ ${{ github.repository_owner }} = "wwqgtxx" ]
+            then ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/wwqgtxx/nezha-dashboard")
             else ALI_IMAGE_NAME=$(echo "registry.cn-shanghai.aliyuncs.com/${{ github.repository_owner }}/nezha-dashboard" | tr '[:upper:]' '[:lower:]')
           fi
           echo "GHCR_IMAGE_NAME=$GHCR_IMAGE_NAME" >> $GITHUB_OUTPUT
@@ -172,5 +172,5 @@ jobs:
           tags: |
             ${{ steps.image-name.outputs.GHCR_IMAGE_NAME }}:latest
             ${{ steps.image-name.outputs.GHCR_IMAGE_NAME }}:${{ steps.extract_branch.outputs.tag }}
-            ${{ steps.image-name.outputs.ALI_IMAGE_NAME }}:latest
-            ${{ steps.image-name.outputs.ALI_IMAGE_NAME }}:${{ steps.extract_branch.outputs.tag }}
+#            ${{ steps.image-name.outputs.ALI_IMAGE_NAME }}:latest
+#            ${{ steps.image-name.outputs.ALI_IMAGE_NAME }}:${{ steps.extract_branch.outputs.tag }}

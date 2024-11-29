@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/naiba/nezha/pkg/utils"
+	"github.com/wwqgtxx/nezha/pkg/utils"
 	"gorm.io/gorm"
 )
 

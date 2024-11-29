@@ -4,7 +4,7 @@
 #   System Required: CentOS 7+ / Debian 8+ / Ubuntu 16+ / Alpine 3+ /
 #   Arch has only been tested once, if there is any problem, please report with screenshots Dysf888@pm.me
 #   Description: Nezha Monitoring Install Script
-#   Github: https://github.com/naiba/nezha
+#   Github: https://github.com/wwqgtxx/nezha
 #========================================================
 
 NZ_BASE_PATH="/opt/nezha"
@@ -126,24 +126,26 @@ pre_check() {
     fi
 
     if [ -n "$CUSTOM_MIRROR" ]; then
-        GITHUB_RAW_URL="gitee.com/naibahq/nezha/raw/master"
+        GITHUB_RAW_URL="gitee.com/wwqgtxx/nezha/raw/master"
         GITHUB_URL=$CUSTOM_MIRROR
         Get_Docker_URL="get.docker.com"
         Get_Docker_Argu=" -s docker --mirror Aliyun"
-        Docker_IMG="registry.cn-shanghai.aliyuncs.com\/naibahq\/nezha-dashboard"
+#        Docker_IMG="registry.cn-shanghai.aliyuncs.com\/wwqgtxx\/nezha-dashboard"
+        Docker_IMG="ghcr.io\/wwqgtxx\/nezha-dashboard"
     else
         if [ -z "$CN" ]; then
             GITHUB_RAW_URL="raw.githubusercontent.com/naiba/nezha/master"
             GITHUB_URL="github.com"
             Get_Docker_URL="get.docker.com"
             Get_Docker_Argu=" "
-            Docker_IMG="ghcr.io\/naiba\/nezha-dashboard"
+            Docker_IMG="ghcr.io\/wwqgtxx\/nezha-dashboard"
         else
-            GITHUB_RAW_URL="gitee.com/naibahq/nezha/raw/master"
+            GITHUB_RAW_URL="gitee.com/wwqgtxx/nezha/raw/master"
             GITHUB_URL="gitee.com"
             Get_Docker_URL="get.docker.com"
             Get_Docker_Argu=" -s docker --mirror Aliyun"
-            Docker_IMG="registry.cn-shanghai.aliyuncs.com\/naibahq\/nezha-dashboard"
+#            Docker_IMG="registry.cn-shanghai.aliyuncs.com\/wwqgtxx\/nezha-dashboard"
+            Docker_IMG="ghcr.io\/wwqgtxx\/nezha-dashboard"
         fi
     fi
 }
@@ -213,18 +215,13 @@ select_version() {
 update_script() {
     echo "> Update Script"
 
-    #curl -sL https://${GITHUB_RAW_URL}/script/install_en.sh -o /tmp/nezha.sh
-    #new_version=$(grep "NZ_VERSION" /tmp/nezha.sh | head -n 1 | awk -F "=" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
-    #if [ -z "$new_version" ]; then
-    #    echo "Script failed to get, please check if the network can link https://${GITHUB_RAW_URL}/script/install.sh"
-    #    return 1
-    #fi
-    #echo "The current latest version is: ${new_version}"
-    if [ -z "$CN" ]; then
-        curl -sL https://raw.githubusercontent.com/nezhahq/scripts/main/install_en.sh -o /tmp/nezha.sh
-    else
-        curl -sL https://gitee.com/naibahq/scripts/raw/main/install_en.sh -o /tmp/nezha.sh
+    curl -sL https://${GITHUB_RAW_URL}/script/install_en.sh -o /tmp/nezha.sh
+    new_version=$(grep "NZ_VERSION" /tmp/nezha.sh | head -n 1 | awk -F "=" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+    if [ -z "$new_version" ]; then
+        echo "Script failed to get, please check if the network can link https://${GITHUB_RAW_URL}/script/install.sh"
+        return 1
     fi
+    echo "The current latest version is: ${new_version}"
     mv -f /tmp/nezha.sh ./nezha.sh && chmod a+x ./nezha.sh
 
     echo "Execute new script after 3s"
@@ -366,19 +363,19 @@ install_agent() {
     echo "Obtaining Agent version number"
 
 
-    _version=$(curl -m 10 -sL "https://api.github.com/repos/nezhahq/agent/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+    _version=$(curl -m 10 -sL "https://api.github.com/repos/wwqgtxx/nezha-agent/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://gitee.com/api/v5/repos/naibahq/agent/releases/latest" | awk -F '"' '{for(i=1;i<=NF;i++){if($i=="tag_name"){print $(i+2)}}}')
+        _version=$(curl -m 10 -sL "https://gitee.com/api/v5/repos/wwqgtxx/nezha-agent/releases/latest" | awk -F '"' '{for(i=1;i<=NF;i++){if($i=="tag_name"){print $(i+2)}}}')
     fi
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://fastly.jsdelivr.net/gh/nezhahq/agent/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/nezhahq\/agent@/v/g')
+        _version=$(curl -m 10 -sL "https://fastly.jsdelivr.net/gh/wwqgtxx/nezha-agent/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/nezhahq\/agent@/v/g')
     fi
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://gcore.jsdelivr.net/gh/nezhahq/agent/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/nezhahq\/agent@/v/g')
+        _version=$(curl -m 10 -sL "https://gcore.jsdelivr.net/gh/wwqgtxx/nezha-agent/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/nezhahq\/agent@/v/g')
     fi
 
     if [ -z "$_version" ]; then
-        err "Fail to obtain agent version, please check if the network can link https://api.github.com/repos/nezhahq/agent/releases/latest"
+        err "Fail to obtain agent version, please check if the network can link https://api.github.com/repos/wwqgtxx/nezha-agent/releases/latest"
         return 1
     else
         echo "The current latest version is: ${_version}"
@@ -389,9 +386,9 @@ install_agent() {
 
     echo "Downloading Agent"
     if [ -z "$CN" ]; then
-        NZ_AGENT_URL="https://${GITHUB_URL}/nezhahq/agent/releases/download/${_version}/nezha-agent_linux_${os_arch}.zip"
+        NZ_AGENT_URL="https://${GITHUB_URL}/wwqgtxx/nezha-agent/releases/download/${_version}/nezha-agent_linux_${os_arch}.zip"
     else
-        NZ_AGENT_URL="https://${GITHUB_URL}/naibahq/agent/releases/download/${_version}/nezha-agent_linux_${os_arch}.zip"
+        NZ_AGENT_URL="https://${GITHUB_URL}/wwqgtxx/nezha-agent/releases/download/${_version}/nezha-agent_linux_${os_arch}.zip"
     fi
 
     _cmd="wget -t 2 -T 60 -O nezha-agent_linux_${os_arch}.zip $NZ_AGENT_URL >/dev/null 2>&1"
@@ -593,15 +590,15 @@ restart_and_update_docker() {
 }
 
 restart_and_update_standalone() {
-    _version=$(curl -m 10 -sL "https://api.github.com/repos/naiba/nezha/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+    _version=$(curl -m 10 -sL "https://api.github.com/repos/wwqgtxx/nezha/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://gitee.com/api/v5/repos/naibahq/nezha/releases/latest" | awk -F '"' '{for(i=1;i<=NF;i++){if($i=="tag_name"){print $(i+2)}}}')
+        _version=$(curl -m 10 -sL "https://gitee.com/api/v5/repos/wwqgtxx/nezha/releases/latest" | awk -F '"' '{for(i=1;i<=NF;i++){if($i=="tag_name"){print $(i+2)}}}')
     fi
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://fastly.jsdelivr.net/gh/naiba/nezha/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/naiba\/nezha@/v/g')
+        _version=$(curl -m 10 -sL "https://fastly.jsdelivr.net/gh/wwqgtxx/nezha/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/naiba\/nezha@/v/g')
     fi
     if [ -z "$_version" ]; then
-        _version=$(curl -m 10 -sL "https://gcore.jsdelivr.net/gh/naiba/nezha/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/naiba\/nezha@/v/g')
+        _version=$(curl -m 10 -sL "https://gcore.jsdelivr.net/gh/wwqgtxx/nezha/" | grep "option\.value" | awk -F "'" '{print $2}' | sed 's/naiba\/nezha@/v/g')
     fi
 
     if [ -z "$_version" ]; then
@@ -619,9 +616,9 @@ restart_and_update_standalone() {
     fi
 
     if [ -z "$CN" ]; then
-        NZ_DASHBOARD_URL="https://${GITHUB_URL}/naiba/nezha/releases/download/${_version}/dashboard-linux-${os_arch}.zip"
+        NZ_DASHBOARD_URL="https://${GITHUB_URL}/wwqgtxx/nezha/releases/download/${_version}/dashboard-linux-${os_arch}.zip"
     else
-        NZ_DASHBOARD_URL="https://${GITHUB_URL}/naibahq/nezha/releases/download/${_version}/dashboard-linux-${os_arch}.zip"
+        NZ_DASHBOARD_URL="https://${GITHUB_URL}/wwqgtxx/nezha/releases/download/${_version}/dashboard-linux-${os_arch}.zip"
     fi
 
     sudo wget -qO $NZ_DASHBOARD_PATH/app.zip "$NZ_DASHBOARD_URL" >/dev/null 2>&1 && sudo unzip -qq -o $NZ_DASHBOARD_PATH/app.zip -d $NZ_DASHBOARD_PATH && sudo mv $NZ_DASHBOARD_PATH/dashboard-linux-$os_arch $NZ_DASHBOARD_PATH/app && sudo rm $NZ_DASHBOARD_PATH/app.zip
@@ -746,7 +743,7 @@ uninstall_dashboard_docker() {
     sudo $DOCKER_COMPOSE_COMMAND -f ${NZ_DASHBOARD_PATH}/docker-compose.yaml down
     sudo rm -rf $NZ_DASHBOARD_PATH
     sudo docker rmi -f ghcr.io/naiba/nezha-dashboard >/dev/null 2>&1
-    sudo docker rmi -f registry.cn-shanghai.aliyuncs.com/naibahq/nezha-dashboard >/dev/null 2>&1
+    sudo docker rmi -f registry.cn-shanghai.aliyuncs.com/wwqgtxx/nezha-dashboard >/dev/null 2>&1
 }
 
 uninstall_dashboard_standalone() {
@@ -834,7 +831,7 @@ show_usage() {
 show_menu() {
     printf "
     ${green}Nezha Monitor Management Script${plain} ${red}${NZ_VERSION}${plain}
-    --- https://github.com/naiba/nezha ---
+    --- https://github.com/wwqgtxx/nezha ---
     ${green}1.${plain}  Install Dashboard
     ${green}2.${plain}  Modify Dashbaord Configuration
     ${green}3.${plain}  Start Dashboard

@@ -1,20 +1,20 @@
 package main
 
 import (
-	"os"
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 	_ "time/tzdata"
 
-	"github.com/naiba/nezha/cmd/dashboard/controller"
-	"github.com/naiba/nezha/cmd/dashboard/rpc"
-	"github.com/naiba/nezha/model"
-	"github.com/naiba/nezha/proto"
-	"github.com/naiba/nezha/service/singleton"
 	"github.com/ory/graceful"
 	flag "github.com/spf13/pflag"
+	"github.com/wwqgtxx/nezha/cmd/dashboard/controller"
+	"github.com/wwqgtxx/nezha/cmd/dashboard/rpc"
+	"github.com/wwqgtxx/nezha/model"
+	"github.com/wwqgtxx/nezha/proto"
+	"github.com/wwqgtxx/nezha/service/singleton"
 )
 
 type DashboardCliParam struct {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/naiba/nezha/model"
-	"github.com/naiba/nezha/pkg/utils"
-	"github.com/naiba/nezha/service/singleton"
+	"github.com/wwqgtxx/nezha/model"
+	"github.com/wwqgtxx/nezha/pkg/utils"
+	"github.com/wwqgtxx/nezha/service/singleton"
 )
 
 func PreferredTheme(c *gin.Context) {

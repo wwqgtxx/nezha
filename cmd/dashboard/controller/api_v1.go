@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/naiba/nezha/model"
-	"github.com/naiba/nezha/pkg/mygin"
-	"github.com/naiba/nezha/service/singleton"
+	"github.com/wwqgtxx/nezha/model"
+	"github.com/wwqgtxx/nezha/pkg/mygin"
+	"github.com/wwqgtxx/nezha/service/singleton"
 )
 
 type apiV1 struct {
@@ -121,7 +121,6 @@ func (v *apiV1) RegisterServer(c *gin.Context) {
 		c.JSON(response.Code, response)
 	}
 }
-
 
 func (v *apiV1) monitorHistoriesById(c *gin.Context) {
 	idStr := c.Param("id")

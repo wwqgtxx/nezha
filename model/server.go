@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/naiba/nezha/pkg/utils"
-	pb "github.com/naiba/nezha/proto"
+	"github.com/wwqgtxx/nezha/pkg/utils"
+	pb "github.com/wwqgtxx/nezha/proto"
 	"gorm.io/gorm"
 )
 

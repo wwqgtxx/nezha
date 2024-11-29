@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/naiba/nezha/model"
+	"github.com/wwqgtxx/nezha/model"
 )
 
 const firstNotificationDelay = time.Minute * 15

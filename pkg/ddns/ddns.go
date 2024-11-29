@@ -10,8 +10,8 @@ import (
 	"github.com/libdns/libdns"
 	"github.com/miekg/dns"
 
-	"github.com/naiba/nezha/model"
-	"github.com/naiba/nezha/pkg/utils"
+	"github.com/wwqgtxx/nezha/model"
+	"github.com/wwqgtxx/nezha/pkg/utils"
 )
 
 var (
