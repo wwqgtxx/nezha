@@ -32,13 +32,11 @@ jobs:
       - run: git config --global --add safe.directory /__w/nezha/nezha
       - uses: actions/checkout@v4
 
-      - name: Fetch IPInfo GeoIP Database
+      - name: Fetch GeoIP Database
         if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-        env:
-          IPINFO_TOKEN: ${{ secrets.IPINFO_TOKEN }}
         run: |
           rm pkg/geoip/geoip.db
-          wget -qO pkg/geoip/geoip.db https://ipinfo.io/data/free/country.mmdb?token=${IPINFO_TOKEN}
+          wget -qO pkg/geoip/geoip.db https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country-without-asn.mmdb
 
       - name: Set up Go
         uses: actions/setup-go@v5

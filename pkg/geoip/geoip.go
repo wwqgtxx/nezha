@@ -19,10 +19,9 @@ var (
 )
 
 type IPInfo struct {
-	Country       string `maxminddb:"country"`
-	CountryName   string `maxminddb:"country_name"`
-	Continent     string `maxminddb:"continent"`
-	ContinentName string `maxminddb:"continent_name"`
+	Country struct {
+		IsoCode string `maxminddb:"iso_code"`
+	} `maxminddb:"country"`
 }
 
 func init() {
@@ -44,10 +43,8 @@ func Lookup(ip net.IP, record *IPInfo) (string, error) {
 		return "", err
 	}
 
-	if record.Country != "" {
-		return strings.ToLower(record.Country), nil
-	} else if record.Continent != "" {
-		return strings.ToLower(record.Continent), nil
+	if record.Country.IsoCode != "" {
+		return strings.ToLower(record.Country.IsoCode), nil
 	}
 
 	return "", fmt.Errorf("IP not found")
