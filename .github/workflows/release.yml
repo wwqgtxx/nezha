@@ -20,9 +20,8 @@ jobs:
 
     name: Build artifacts
     runs-on: ubuntu-latest
-    container:
-      image: goreleaser/goreleaser-cross:v1.23
     env:
+      CGO_ENABLED: 0
       GOOS: ${{ matrix.goos }}
       GOARCH: ${{ matrix.goarch }}
       GOARM: ${{ matrix.goarm }}
@@ -41,7 +40,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.23.x"
+          go-version: "1.26.x"
 
       - name: Build
         uses: goreleaser/goreleaser-action@v6

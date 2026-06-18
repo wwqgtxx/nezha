@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
+	sqlite "github.com/ncruces/go-sqlite3/gormlite"
 	"github.com/patrickmn/go-cache"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
 	"github.com/wwqgtxx/nezha/model"
