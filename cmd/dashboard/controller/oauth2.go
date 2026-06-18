@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
@@ -15,13 +14,13 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/gin-gonic/gin"
-	GitHubAPI "github.com/google/go-github/v47/github"
+	GitHubAPI "github.com/google/go-github/v88/github"
 	"github.com/patrickmn/go-cache"
 	"github.com/wwqgtxx/nezha/model"
 	"github.com/wwqgtxx/nezha/pkg/mygin"
 	"github.com/wwqgtxx/nezha/pkg/utils"
 	"github.com/wwqgtxx/nezha/service/singleton"
-	"github.com/xanzy/go-gitlab"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 	"golang.org/x/oauth2"
 	GitHubOauth2 "golang.org/x/oauth2/github"
 	GitlabOauth2 "golang.org/x/oauth2/gitlab"
@@ -170,10 +169,14 @@ func (oa *oauth2controller) callback(c *gin.Context) {
 	if err == nil {
 		if singleton.Conf.Oauth2.Type == model.ConfigTypeGitlab || singleton.Conf.Oauth2.Type == model.ConfigTypeJihulab {
 			var gitlabApiClient *gitlab.Client
+			ts := oauth2.StaticTokenSource(
+				&oauth2.Token{AccessToken: otk.AccessToken},
+			)
+			as := gitlab.OAuthTokenSource{TokenSource: ts}
 			if singleton.Conf.Oauth2.Type == model.ConfigTypeGitlab {
-				gitlabApiClient, err = gitlab.NewOAuthClient(otk.AccessToken)
+				gitlabApiClient, err = gitlab.NewAuthSourceClient(as)
 			} else {
-				gitlabApiClient, err = gitlab.NewOAuthClient(otk.AccessToken, gitlab.WithBaseURL("https://jihulab.com/api/v4/"))
+				gitlabApiClient, err = gitlab.NewAuthSourceClient(as, gitlab.WithBaseURL("https://jihulab.com/api/v4/"))
 			}
 			var u *gitlab.User
 			if err == nil {
@@ -218,18 +221,19 @@ func (oa *oauth2controller) callback(c *gin.Context) {
 			var client *GitHubAPI.Client
 			oc := oauth2Config.Client(ctx, otk)
 			if singleton.Conf.Oauth2.Type == model.ConfigTypeGitee {
-				baseURL, _ := url.Parse("https://gitee.com/api/v5/")
-				uploadURL, _ := url.Parse("https://gitee.com/api/v5/uploads/")
-				client = GitHubAPI.NewClient(oc)
-				client.BaseURL = baseURL
-				client.UploadURL = uploadURL
+				client, err = GitHubAPI.NewClient(
+					GitHubAPI.WithHTTPClient(oc),
+					GitHubAPI.WithURLs(new("https://gitee.com/api/v5/"), new("https://gitee.com/api/v5/uploads/")),
+				)
 			} else {
-				client = GitHubAPI.NewClient(oc)
+				client, err = GitHubAPI.NewClient(GitHubAPI.WithHTTPClient(oc))
 			}
-			var gu *GitHubAPI.User
-			gu, _, err = client.Users.Get(ctx, "")
 			if err == nil {
-				user = model.NewUserFromGitHub(gu)
+				var gu *GitHubAPI.User
+				gu, _, err = client.Users.Get(ctx, "")
+				if err == nil {
+					user = model.NewUserFromGitHub(gu)
+				}
 			}
 		}
 	}

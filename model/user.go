@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"code.gitea.io/sdk/gitea"
-	"github.com/google/go-github/v47/github"
-	"github.com/xanzy/go-gitlab"
+	"github.com/google/go-github/v88/github"
+	gitlab "gitlab.com/gitlab-org/api/client-go"
 )
 
 type User struct {
